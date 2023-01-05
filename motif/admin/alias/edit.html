@@ -1,0 +1,53 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="AliasSave.htm" enctype="multipart/form-data">
+    #{tag.keep:str,'id',id}
+    #{tag.keep:str,'AliasTable',AliasTable}
+    #{tag.keep:str,'exemplo',exemplo}
+    #{tag.keep:str,'aliasReg',aliasReg}
+    <div class="field">
+      <span>Alias</span>
+      #{=aliasLen,tag.fieldLen:int,'aliasDat','alias'}
+      #{tag.input:str,'alias',alias,%aliasLen,%aliasLen}
+    </div>
+    <div class="field">
+      <span>Real</span>
+      #{=realLen,tag.fieldLen:int,'aliasDat','real'}
+      #{tag.input:str,'real',real,%realLen,%realLen}
+    </div>
+    <div class="field checkbox">
+      #{tag.checkbox:str,'ativo','Ativo',%ativo}
+    </div>    
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Limpar" onclick="clean(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+      #{tag.render:str,id,'admin/alias/remove.html'}
+    </div>
+  </form>
+  <script>
+  var title="Alias Edit";
+  /*=========================================================
+  
+  =========================================================*/
+  var save=function(btn){
+    motifSubmit(btn.form);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var clean=function(){
+    document.forms[0].action="AliasNovo.htm";
+    motifSubmit(document.forms[0]);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var volta=function(){
+    document.forms[0].action="alias.html";
+    motifSubmit(document.forms[0]);
+  };
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

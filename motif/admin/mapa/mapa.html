@@ -1,0 +1,194 @@
+<div class="menu">
+  <p class="join">menuPapel</p>
+  <a href="javascript:mapaPanelShow();">Mapa</a>
+</div>
+<style>
+#mapaPanel  td input[type="checkbox"]{
+  max-height:10pt;
+}
+</style>
+<div id="mapaPanel" class="panel">
+  <div class="title">Mapa de Funções</div>
+  <div class="field">
+    <div class="fieldInline" style="vertical-align:top">
+      <span><a>Nomes</a></span>
+      <input type="text" id="mapaNomesQuery" size="20" maxlength="1024">
+      <span id="mapaNomesLen">0</span>
+      <div style="height:200px;overflow-y:auto;margin-top:10px">
+        <table id="mapaNomes">
+          <tr>
+            <th></th>
+            <th>Nomes</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="fieldInline">
+      <span>Grupos</span>
+      <input type="text" id="mapaGrupos" size="20" maxlength="1024">
+      <span><a>Mapear</a></span>
+      <textarea id="mapaText" style="height:200px;min-width:400px;margin-top:6px;"></textarea>
+    </div>
+  </div>
+  <div class="field">
+    <div>#{tag.checkbox:str,'alias','Aliás',0}</div>
+    <div>#{tag.checkbox:str,'papel','Papel',0}</div>
+    <a>Fechar</a>
+    <a>Confirmar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var mapaPanelShow=function(){
+  var a=window.document.activeElement;
+  
+  motifPanel(mapaPanel);
+  mapaPanel.style.top="200px";
+  mapaPanel.style.left="100px";
+  mapaPanel.onclick=mapaAction;
+};
+/*=========================================================
+
+=========================================================*/
+var mapaList=function(){
+  var param=[];
+  
+  motifMessage("Aguarde...",alert,0);
+  param.push({name:"query",value:mapaNomesQuery.value.trim()});
+  motifAjax("MapaList.htm",param,function(response){
+    while(mapaNomes.rows.length>1)
+      mapaNomes.deleteRow(1);
+    response.split(/\,/).forEach(function(item){
+      if(item.length){
+        var row=mapaNomes.insertRow(-1);
+        
+        row.insertCell(-1).innerHTML="<input type='checkbox'>";
+        row.insertCell(-1).innerHTML=item;
+      }
+    });
+    mapaNomesLen.innerHTML=(mapaNomes.rows.length-1)+"";
+    motifMessage(null,null,0);
+  });
+};
+/*=========================================================
+
+=========================================================*/
+var mapaMapeia=function(){
+  var i;
+  var buffer="";
+  
+  for(i=1;i<mapaNomes.rows.length-1;i++){
+    var input=mapaNomes.rows[i].cells[0].querySelector("input");
+    
+    if(input.checked){
+      var metodo=mapaNomes.rows[i].cells[1].innerText;
+      var item=metodo.split(/\:{2}/);
+      
+      if(item.length==2){
+        var cls=item[0].replace(/bean/img,"").split("");
+        var mtd=item[1].split("");
+        var mapeado;
+        
+        mtd[0]=mtd[0].toUpperCase();
+        mapeado=""
+          .concat(cls.join(""))
+          .concat(mtd.join(""))
+          .concat(".htm");
+        
+        buffer+=""
+          .concat(metodo)
+          .concat("=>")
+          .concat(mapeado)
+          .concat("\n");
+      }
+    }
+  }
+  mapaText.value=buffer;
+};
+/*=========================================================
+
+=========================================================*/
+var mapaSave=function(){
+  var list=mapaPanel.querySelectorAll("input[type=checkbox]");
+  var alias=list[list.length-2].checked;
+  var papel=list[list.length-1].checked;
+  var grupo=mapaGrupos.value.trim();
+  var mapa=mapaText.value.trim();
+  var param=[];
+  var arg={};
+  
+  var action=function(obj){
+    if(obj.label=="Sim"){
+      motifMessage("Aguarde...","alert",0);
+      motifAjax(
+        "MapaSave.htm",
+        param,
+        function(response){
+          if(response.match(/^ERRO.*/))
+            motifMessage(response,"error",15000);
+          else
+            motifMessage(response,"success",15000);
+        }
+      );
+    }
+    obj.close();
+  };
+  
+  if(!alias&&!papel){
+    motifMessage("Selecione <b>Alias</b> ou <b>Papel</b>.","error",5000);
+    return;
+  }
+  if(papel&&!grupo.length){
+    motifMessage("Informe 1 ou mais grupos (,).","error",5000);
+    return;
+  }
+  if(!mapa.length){
+    motifMessage("Nada para mapear.","error",5000);
+    return;
+  }
+  
+  param.push({name:"alias",value:alias?1:0});
+  param.push({name:"papel",value:papel?1:0});
+  param.push({name:"grupo",value:grupo});
+  param.push({name:"mapa",value:mapa});
+  
+  arg.msg="Confirma Mapeamento?";
+  arg.action=action;
+  arg.buttons="Sim|Nao";
+  
+  motifMessage(arg,"action",15000);
+  
+};
+/*=========================================================
+
+=========================================================*/
+var mapaAction=function(action){
+  var a=motifActionTarget(action,"a");
+  
+  action.stopPropagation();
+  if(!a)
+    return;
+  switch(a.innerHTML.toLowerCase()){
+    case "nomes":
+      mapaList();
+      break;
+    case "mapear":
+      mapaMapeia();
+      break;
+    case "fechar":
+      mapaPanel.style.display="none";
+      break;
+    case "confirmar":
+      mapaSave();
+      break;
+  }
+};
+
+
+
+
+//mapaPanelShow();
+
+</script>

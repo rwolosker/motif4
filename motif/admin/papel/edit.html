@@ -1,0 +1,43 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="PapelSave.htm" enctype="multipart/form-data">
+    #{tag.include:str,'admin/papel/keep.html'}
+    <div class="field">
+      <span>Nome</span>
+      #{=nomeLen,tag.fieldLen:int,'papelDat','nome'}
+      #{tag.input:str,'nome',nome,%nomeLen,%nomeLen}
+    </div>
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Limpar" onclick="clean(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+      #{tag.render:str,id,'admin/papel/remove.html'}
+    </div>
+  </form>
+  <script>
+  var title="Papel Edit";
+  /*=========================================================
+  
+  =========================================================*/
+  var save=function(btn){
+    motifSubmit(btn.form);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var clean=function(){
+    document.forms[0].action="PapelNovo.htm";
+    motifSubmit(document.forms[0]);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var volta=function(){
+    
+    document.forms[0].action="papel.html";
+    motifSubmit(document.forms[0]);
+  };
+</script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

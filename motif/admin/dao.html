@@ -1,0 +1,124 @@
+${INCLUDE:string,'templateBegin.html'}
+<div class="main">
+  <style>
+    textarea{
+      width:700px;
+      height:200px;  
+    }
+    div.daoOutput{
+      min-width:700px;
+      min-height:200px;
+      max-height:300px;
+      background-color:#D6B5B5;
+      overflow:scroll;
+      white-space:pre;     
+      resize:both
+    }
+    div.daoOutput table{
+      margin-left:10px; 
+      margin-top:10px;
+      background-color:#BDBDBD;  
+    }
+    div.download{
+        
+    }
+    div.download span{
+      display:none;
+    }
+  </style>
+  <form method="POST" action="DaoDqlExecute.htm" enctype="multipart/form-data">
+    <div class="field">
+      <div class="fieldInline">
+        <span>Command</span>
+        <textarea name="command">${@command}</textarea>
+      </div>
+    </div>
+    <div class="button">
+      <input type="button" value="Executar" onclick="execute(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      <div class="fieldInline">
+        <span>Out</span>
+        <div class="daoOutput">${@commandOut}</div>
+      </div>
+    </div>
+    ${KEEP:str,'commandPos',@commandPos}
+    ${KEEP:str,'divDaoOutputWidth',@divDaoOutputWidth}
+    ${KEEP:str,'divDaoOutputHeight',@divDaoOutputHeight}
+  </form>
+  ${INCLUDE:string,'mynav.html'}
+  <script>
+  var title="Dao";
+  motifTextAreaIdent(document.forms[0]["command"]);
+  var upload=function(btn){
+    uploadPanel.style.display="inline";
+  };
+  var download=function(btn){
+    downloadPanel.style.display="inline";
+  };
+  var execute=function(btn){
+    motifMessage("Aguarde...","alert",0);
+    btn.form["commandPos"].value=btn.form["command"].selectionStart;
+    btn.form["divDaoOutputWidth"].value=document.querySelectorAll("div.daoOutput")[0].style.width;
+    btn.form["divDaoOutputHeight"].value=document.querySelectorAll("div.daoOutput")[0].style.height;
+    btn.form.submit();
+  };
+  var volta=function(){
+    document.forms[0].action="aplicacao.html";
+    document.forms[0].submit();
+  };
+  document.querySelectorAll("div.daoOutput")[0].addEventListener("click",function(action){
+    var
+      ok=true
+        &&action.target
+        &&action.target.tagName
+        &&action.target.tagName=="A"
+        &&action.target.parentNode.tagName
+        &&action.target.parentNode.tagName=="DIV"
+        &&action.target.parentNode.className
+        &&action.target.parentNode.className.match(/download/);
+    
+    if(ok){
+      action.stopPropagation();
+      {
+        var nome=action.target.download;
+        var b=motifBase64toBlob(action.target.parentNode.getElementsByTagName("SPAN")[0].innerHTML,"application/octet-stream");
+        var a=document.createElement("A");
+        var id=null;
+        var hidden=function(){
+          a.parentNode.removeChild(a);
+          window.clearInterval(id);
+        };
+        a.style.display="none";
+        a.innerHTML=a.download=nome;
+        a.href=window.URL.createObjectURL(b);
+        document.body.appendChild(a);
+        a.click();
+        id=window.setInterval(hidden,15000);
+        downloadPanel.style.display="none";
+        motifMessage("","success",1);
+      }
+    }
+  });
+  {
+    var txt=document.forms[0]["command"];
+    var pos=0;
+    
+    try{
+      pos=parseInt("${@commandPos}");      
+    }
+    catch(e){}
+    
+    if(pos)
+      txt.setSelectionRange(pos,pos);
+    
+    if("${@divDaoOutputWidth}".length)
+      document.querySelectorAll("div.daoOutput")[0].style.width="${@divDaoOutputWidth}";
+    if("${@divDaoOutputHeight}".length)
+      document.querySelectorAll("div.daoOutput")[0].style.height="${@divDaoOutputHeight}";
+    txt.focus();
+  }
+  </script>
+</div>
+${INCLUDE:string,'templateEnd.html'}

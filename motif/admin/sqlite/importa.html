@@ -1,0 +1,129 @@
+<div class="menu">
+  <p class="join">SqLite</p>
+  <a href="javascript:datImport();">Importar DAT</a>
+</div>
+<div id="datImportPanel" class="panel">
+  <div class="title">Importar Dat</div>
+  <div class="field">
+    <div class="fieldInline">
+      <span>Files</span>
+      <style>
+        #datImportPanelList{
+          max-height:100px;
+          overflow-y:auto;
+        }
+      </style>
+      <div id="datImportPanelList" class="checklist"></div>
+    </div>
+  </div>
+  <div class="field">
+    <div>#{tag.checkbox:str,'create','create',1}</div>
+    <div>#{tag.checkbox:str,'drop','drop',1}</div>
+  </div>
+  <div class="field">
+    <a>Fechar</a>
+    <a>Todos</a>
+    <a>Importar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var sqLiteDatImport=function(){
+  var drop=datImportPanel.querySelectorAll("input[name=drop]")[0].checked;
+  var create=datImportPanel.querySelectorAll("input[name=create]")[0].checked;
+  var selecionado=[];
+  var action={
+    msg:"Confirma Importar?",
+    buttons:"SIM|NAO",
+    action:function(obj){
+      obj.close();
+      if(obj.label=="SIM"){
+        if(!database.value.trim().length){
+          motifMessage("Informe Arquivo Database." ,"error",15000);
+          return;  
+        }
+        if(selecionado.length){
+          motifMessage("Aguarde..." ,"alert",15000);
+          motifAjax(
+            "SqLiteDatImport.htm",[
+             {name:"database",value:database.value},
+             {name:"drop",value:drop?"1":"0"},
+             {name:"create",value:create?"1":"0"},
+             {name:"selecionado",value:selecionado.join("|")}],
+            function(response){
+              var type="success";
+              if(response.match(/ERRO/))
+                type="error";
+              motifMessage(response,type,15000);
+            }
+          );
+        }  
+        else{
+          motifMessage("Nenhum Selecionado." ,"error",15000);
+          return;  
+        }
+      }
+    }    
+  };
+  datImportPanelList.querySelectorAll("input").forEach(function(item){
+    if(item.checked)
+      selecionado.push(item.value);
+  });
+  motifMessage(action,"action",15000);
+};
+/*=========================================================
+
+=========================================================*/
+var datList=function(){
+  motifAjax("SqLiteDatList.htm",[],function(response){
+    var item=response.split(/\,/);
+    var row="<div><input type='checkbox' value='_value_'><p>_value_</p></div>";
+    var html="";
+
+    for(var i=0;i<item.length;i++)
+      html+=row.replaceAll(/\_value\_/g,item[i]);
+    datImportPanelList.innerHTML=html;
+  });
+}
+/*=========================================================
+
+=========================================================*/
+var datImportAction=function(event){
+  var a=motifActionTarget(event,"a");
+
+  event.stopPropagation();
+  if(!a)
+    return;
+  switch(a.innerText){
+    case "Fechar":
+      datImportPanel.style.display="none";
+      break;
+    case "Todos":
+      datImportPanelList.querySelectorAll("input").forEach(function(item){
+        item.checked=true;
+      });
+      break;
+    case "Importar":
+      sqLiteDatImport();
+      break;
+  }
+};
+/*=========================================================
+
+=========================================================*/
+var datImport=function(){
+  motifPanel(datImportPanel);
+  datImportPanel.style.top=command.offsetTop+"px";
+  datImportPanel.style.left=command.offsetLeft+"px";
+  datList();
+  datImportPanel.onclick=datImportAction;
+};
+/*=========================================================
+
+=========================================================*/
+motifAction(window,"load",function(){
+  //datImport();  
+});
+</script>

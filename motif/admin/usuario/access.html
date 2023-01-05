@@ -1,0 +1,51 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="AccessLog.htm" enctype="multipart/form-data">
+    <div class="field">
+      <span>Busca</span>
+      #{tag.input:str,'exemplo',exemplo,30,1024}
+    </div>
+    <div class="button">
+      <input type="button" value="Buscar" onclick="busca(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      <div>
+        <span><b>linhas:</b></span>
+        <span id="tabelaLinhas"></span>
+      </div>
+      <table id="tabela">
+        <tr>
+          <th>DATA</th>
+          <th>IP</th>
+          <th>URL</th>
+          <th>ACTION</th>
+        </tr>
+        #{AccessTable}
+      </table>
+    </div>
+  </form>
+</div>
+<script>
+var title="Usuario Log Relatorio";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var busca=function(btn){
+  motifSubmit(btn.form);
+};
+/*=========================================================
+
+=========================================================*/
+motifAction(window,"load",function(){
+  tabelaLinhas.innerHTML=tabela.rows.length-1;
+});
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

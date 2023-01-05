@@ -1,0 +1,75 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <style>
+    textarea{
+      width:720px;
+      height:200px;  
+    }
+  </style>
+  <form method="POST" action="" enctype="multipart/form-data">
+    <div class="field">
+      <div class="fieldInline">
+        <span>File</span>
+        #{tag.input:str,'editFile',editFile,100,1024}
+      </div>
+    </div>
+    <div class="field">
+      <div class="fieldInline">
+        <span>Edit</span>
+        <textarea name="editBody">#{editBody}</textarea>
+      </div>
+    </div>
+    <div class="button">
+      <input type="button" value="Salvar" onclick="salva(this);">
+      <input type="button" value="Abrir" onclick="abre(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+  </form>
+  <script>
+  var title="Edit";
+  var abre=function(btn){
+    var file=btn.form["editFile"].value;
+    var item=[];
+    var call=function(txt,xml){
+      if(xml.response.match(/^ERRO.*/))
+        motifMessage(xml.response,"error",15000);
+      else{
+        motifMessage("Opened [".concat(file).concat("]."),"success",1000);
+        btn.form["editBody"].value=xml.response;
+      }
+    };
+    
+    if(file.trim().length==0){
+      motifMessage("Required [File].","error",15000);
+      return;
+    }
+    item.push({name:"editFile",value:file});
+    motifMessage("Aguarde...","alert",15000);
+    motifAjax("EditOpen.htm",item,call);
+  };
+  var salva=function(btn){
+    var file=btn.form["editFile"].value;
+    var item=[];
+    var call=function(txt,xml){
+      if(xml.response.match(/^ERRO.*/))
+        motifMessage(xml.response,"error",15000);
+      else
+        motifMessage("Saved [".concat(file).concat("]."),"success",1000);
+    };
+    
+    if(file.trim().length==0){
+      motifMessage("Required [File].","error",15000);
+      return;
+    }
+    item.push({name:"editFile",value:file});
+    item.push({name:"editBody",value:btn.form["editBody"].value});
+    motifMessage("Aguarde...","alert",15000);
+    motifAjax("EditSave.htm",item,call);
+  };
+  var volta=function(){
+    document.forms[0].action="aplicacao.html";
+    document.forms[0].submit();
+  };
+  </script>
+</div>
+#{tag.include:str,'templateEnd.html'}

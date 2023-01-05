@@ -1,0 +1,11 @@
+id=integer
+nome=text,75
+matricula=text,9
+cpf=text,12
+telefone=text,12
+email=text,75
+ativo=boolean
+bloqueado=boolean
+uid=text,31
+ldap=boolean
+cerberus=boolean

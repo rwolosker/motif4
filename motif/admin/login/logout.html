@@ -1,0 +1,21 @@
+#{tag.set:void,'sessionNome'   ,'str',''}
+#{tag.set:void,'sessionId'     ,'int',0 }
+#{tag.set:void,'sessionGrupo'  ,'str',''}
+#{tag.set:void,'sessionPapel'  ,'str',''}
+#{tag.set:void,'sessionIsLogin','int',0 }
+#{tag.set:void,
+  'AspMessage',
+  'str',
+  'Voce Saiu! <a style="display:inline" href="aplicacao.html">Login</a>'
+}
+#{tag.set:void,'AspMessageType','str','success'}
+#{tag.set:void,'AspMessageTime','str','0'}
+#{tag.unsetCookie:void,'sessionUser'}
+
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <script>
+  var title="Usuario Logout";
+  </script>
+</div>
+#{tag.include:str,'templateEnd.html'}

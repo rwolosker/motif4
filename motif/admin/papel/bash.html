@@ -1,0 +1,107 @@
+<div class="menu">
+  <p class="join">Papel</p>
+  <a href="javascript:bashPanelShow();">Bash Import</a>
+</div>
+<div id="bashPanel" class="panel">
+  <div class="title">Bash Import</div>
+  <div class="field">
+    <div class="fieldInline">
+      <span>Filtro</span>
+      <input type="text" style="width:143px">
+    </div>
+    <div class="fieldInline">
+      <span>Troca</span>
+      <input type="text" style="width:143px">
+    </div>
+  </div>
+  <div class="field">
+    <div class="fieldInline">
+      <span>CSV</span>
+      <textarea style="width:300px;height:250px"></textarea>
+    </div>
+  </div>
+  <div class="field">
+    <a>Métodos</a>
+    <a>Importar</a>
+    <a>Fechar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var bashPanelAction=function(event){
+  event.stopPropagation();
+  var a=motifActionTarget(event,"a");
+  var txt=bashPanel.querySelector("textarea");
+  var filtrotxt=bashPanel.querySelectorAll("input")[0];
+  var replacetxt=bashPanel.querySelectorAll("input")[1];
+  var filtro=function(){
+    if((filtrotxt.value=filtrotxt.value.trim()).length){
+      var update=[];
+      var exp=new RegExp().compile(filtrotxt.value,"i");
+
+      txt.value.split(/\n/).forEach(function(valor){
+        if(exp.test(valor))update.push(valor);
+      });
+      txt.value=update.join("\n");
+
+      if((replacetxt.value=replacetxt.value.trim()).length){
+        var exp=new RegExp().compile(filtrotxt.value,"g");
+
+        txt.value=txt.value.replace(exp,replacetxt.value);
+      }
+    }
+  };
+  var importa=function(){
+    var param={
+      msg:"Confirma Importar?",
+      buttons:"SIM|NAO",
+      action:function(obj){
+        obj.close();
+        if(obj.label=="SIM"){
+          motifMessage("Aguarde...","alert",0);
+          motifAjax("PapelImport.htm",
+          [{name:"txt",value:txt.value}],
+          function(response){
+            var type="success";
+
+            if(response.match(/ERRO/))
+              type="error";
+            motifMessage(response,type,15000);
+          });
+        }
+      }      
+    };
+    motifMessage(param,"action",15000);
+  };
+
+  if(!a)
+    return;
+  switch(a.innerText){
+    case "Fechar":
+      bashPanel.style.display="none";
+      break;
+    case "Métodos":
+      motifMessage("Aguarde...","alert",0);
+      motifAjax("PapelMetodoList.htm",[],function(response){
+        motifMessage("Aguarde...","alert",1);
+        txt.value=response;
+        filtro();
+      });
+      break;
+    case "Importar":
+      importa();
+      break;
+  }
+}
+/*=========================================================
+
+=========================================================*/
+var bashPanelShow=function(){
+  motifPanel(bashPanel);
+  bashPanel.style.top=tabela.offsetTop+"px";
+  bashPanel.style.left=tabela.offsetLeft+"px";
+  bashPanel.onclick=bashPanelAction;
+};
+</script>

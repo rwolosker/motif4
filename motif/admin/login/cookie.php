@@ -1,0 +1,13 @@
+<?php
+date_default_timezone_set("America/Sao_Paulo");
+$utc=strtotime("2100-12-31");
+setcookie(
+  "sessionUser",
+  ("#{sessionUser.out}"),
+  $utc,
+  "/",
+  "",
+  false,
+  true
+);
+?>

@@ -1,0 +1,35 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="PublicoSave.htm" enctype="multipart/form-data">
+    #{tag.include:str,'admin/publico/keep.html'}
+    <div class="field">
+      <span>Nome</span>
+      #{=nomeLen,tag.fieldLen:int,'publicoDat','nome'}
+      #{tag.input:str,'nome',nome,%nomeLen,%nomeLen}
+    </div>
+    <div class="field checkbox">
+      #{tag.checkbox:str,'ativo','Ativo',%ativo}
+    </div>    
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Limpar" onclick="clean(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+      #{tag.render:str,id,'admin/publico/remove.html'}
+    </div>
+  </form>
+  <script>
+  var title="Publico Edit";
+  var save=function(btn){
+    btn.form.submit();
+  };
+  var clean=function(){
+    document.forms[0].action="PublicoNovo.htm";
+    document.forms[0].submit();
+  };
+  var volta=function(){
+    document.forms[0].action="publico.html";
+    document.forms[0].submit();
+  };
+  </script>
+</div>
+#{tag.include:str,'templateEnd.html'}

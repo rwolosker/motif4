@@ -1,0 +1,3 @@
+usuario=integer
+data=datetime
+ok=boolean

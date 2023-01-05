@@ -1,0 +1,166 @@
+<div class="menu">
+  <p class="join">Papel</p>
+  <a href="javascript:configExport();">Exportar Configuração</a>
+  <a href="javascript:configImport();">Importar Configuração</a>
+</div>
+<div id="configImportPanel" class="panel" style="min-width:200px">
+  <div class="title">Importar Configuração</div>
+  <div class="field">
+    <div class="fieldInline">
+      <span>Importar</span>
+      <div class="checklist">
+      </div>      
+    </div>
+    <div class="field">
+      <a>Fechar</a>
+      <a>Todos</a>
+      <a>Importar</a>
+    </div>
+  </div>
+</div>
+<div id="configImportPanelRes" class="panel">
+  <div class="title">Resultado</div>
+  <div class="field"></div>
+  <div class="field">
+    <a>Fechar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var configExport=function(){
+  motifAjax("ConfigExport.htm",[],function(response){
+    motifDownloadBlob(
+      motifBase64toBlob(
+        btoa(response),
+        "text/plain; charset=iso-8859-15"),
+      "config.txt"
+    );
+  });
+};
+/*=========================================================
+
+=========================================================*/
+var configImportPanelShow=function(unique,txt){
+  motifPanel(configImportPanel);
+  configImportPanel.style.top=tabela.offsetTop+"px";
+  configImportPanel.style.left=tabela.offsetLeft+"px";
+  {
+    var list=configImportPanel.querySelector("div.checklist");
+    var html="<div><input type='checkbox' value='valor'><p>valor</p></div>";
+    var buffer="";
+
+    for(var i=0;i<unique.length;i++)
+      buffer+=html.replaceAll("valor",unique[i]);
+    
+    list.innerHTML=buffer;
+    var action={
+      msg:"Confirma Importação?",
+      buttons:"SIM|NÃO",
+      action:function(obj){
+        obj.close();
+        if(obj.label=="SIM"){
+          var list=configImportPanel.querySelectorAll("input[type='checkbox']");
+          var opcao=[];
+
+          for(var i=0;i<list.length;i++)
+            if(list[i].checked)
+              opcao.push(list[i].value);
+          if(!opcao.length){
+            motifMessage("Escolha uma ou mais opções.","error",15000);
+            return;  
+          }
+          motifMessage("Aguarde...","alert",0);
+          motifAjax(
+            "ConfigImport.htm",
+            [{name:"opcao",value:opcao.join(",")},
+            { name:"txt",value:txt}],
+            function(response){
+              motifMessage("Aguarde...","alert",1);
+              configImportPanelResShow(response);
+            });
+        }
+      }    
+    };
+    configImportPanel.onclick=function(event){
+      var a=motifActionTarget(event,"a");
+
+      event.stopPropagation();
+      if(!a)
+        return;
+      switch(a.innerText){
+        case "Fechar":
+          configImportPanel.style.display="none";
+          configImportPanelRes.style.display="none";
+          break;
+        case "Importar":
+          motifMessage(action,"action",15000);
+          break;          
+        case "Todos":
+          {
+            var list=configImportPanel.querySelectorAll("input[type='checkbox']");
+
+            for(var i=0;i<list.length;i++)
+              list[i].checked=true;
+          }
+          break;          
+      }
+    };    
+  }
+};
+/*=========================================================
+
+=========================================================*/
+var configImport=function(){
+  motifUpload(function(obj){
+    var txt=atob(obj.url.split(/\;base64\,/)[1]);
+    var item=txt.split(/\r\n|\n/img);
+    var unique=[];
+    var nome="";
+
+    console.log(txt);
+
+    for(var i=0;i<item.length;i++)
+      if(nome!=item[i].split(/\:/)[0])
+        unique.push(nome=item[i].split(/\:/)[0]);
+    unique.sort(function(a,b){
+      return a.localeCompare(b);
+    });
+    if(!unique[0].length)
+      unique=unique.slice(1,unique.length);
+    configImportPanelShow(unique,txt);
+  });
+};
+/*=========================================================
+
+=========================================================*/
+var configImportPanelResShow=function(html){
+  motifPanel(configImportPanelRes);
+  configImportPanelRes.style.top=configImportPanel.offsetTop+"px";
+  configImportPanelRes.style.left=(configImportPanel.offsetLeft+configImportPanel.offsetWidth+10)+"px";
+  configImportPanelRes.onclick=function(){
+    var a=motifActionTarget(event,"a");
+
+    event.stopPropagation();
+    if(!a)
+      return;
+    switch(a.innerText){
+      case "Fechar":
+        configImportPanelRes.style.display="none";
+        break;
+    }
+  };
+  configImportPanelRes.querySelectorAll("div.field")[0].innerHTML=html;
+};
+motifAction(window,"load",function(){
+  return;
+  try{
+  configImportPanelShow();
+  }
+  catch(e){}
+  configImportPanelResShow("teste");
+});
+
+
+</script>

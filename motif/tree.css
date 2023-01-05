@@ -1,0 +1,42 @@
+div.tree-base{
+  background-color:#f5e8e8;
+  display:inline-block;
+  padding:10px;
+  width:250px;
+  height:250px;
+  overflow:auto;
+}  
+div.tree-node-item{
+  margin-left:20px;
+  display:none; 
+}
+div.tree-base span,
+div.tree-base a{
+  display:block; 
+  cursor:pointer;
+  text-decoration:none;
+  color:blue
+}
+div.tree-base span:hover,
+div.tree-base a:hover,
+div.tree-base > a:hover{
+  font-weight:bold;
+  /*text-decoration:underline;*/  
+}
+div.tree-node{
+  /*padding-left:10px;*/
+  line-height:12pt; 
+}
+div.tree-base span{
+  padding-left:10px;
+  background-image:url("${IMG:str,'menu.png'}");
+  background-repeat:no-repeat;
+  background-position:1px 3px;
+}
+div.tree-base > a{
+  padding-left:20px;
+  line-height:12pt;
+  cursor:pointer;
+  text-decoration:none;
+  color:blue  
+}    

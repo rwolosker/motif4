@@ -1,0 +1,126 @@
+<input type="button" value="Tables" onclick="tablesShow();">
+<div id="PanelTable" class="panel">
+  <style>
+    #PanelTable{
+      min-width:200px; 
+      min-height:300px; 
+    }
+    #PanelTableBody{
+      min-height:300px;
+      max-height:300px;
+      overflow-y:auto;
+      margin:3px;  
+      padding:3px;  
+    }
+    #PanelTableBody .panel-table table{
+      margin-top:5px;  
+      margin-bottom:5px;
+      background-color:#BDC9C2;
+    }
+  </style>
+  <div class="title">Tables</div>
+  <div class="field" id="PanelTableBody">
+  </div>
+  <div class="field">
+    <a>Fechar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var tableShowResolve=function(a){
+  var table=a.parentNode.querySelector("table");
+  var display=table.style.display;
+
+  table.style.display=display=="none"?"":"none";
+};
+/*=========================================================
+
+=========================================================*/
+var tablesShow=function(){
+  var command=motifFindTagReverse(PanelTable,"form").command;
+
+  motifPanel(PanelTable);
+  PanelTable.style.top=command.offsetTop+"px";
+  PanelTable.style.left=(command.offsetWidth+40)+"px";
+  sqLiteTables();
+  PanelTable.onclick=function(event){
+    var a=motifActionTarget(event,"a");
+
+    if(a)
+      switch(a.innerText){
+        case "Fechar":
+          PanelTable.style.display="none";
+          break;
+        default:
+          tableShowResolve(a);
+          break;
+      }
+  }
+};
+/*=========================================================
+
+=========================================================*/
+var sqLiteTables=function(){
+  var database=motifFindTagReverse(PanelTable,"form").database;
+
+  motifMessage("Aguarde..." ,"alert",0);
+  motifAjax(
+    "SqLiteTables.htm",[
+      {name:"database",value:database.value}],
+    function(response){
+      motifMessage("Aguarde..." ,"alert",1);
+      if(response.match(/^ERRO/img)){
+        motifMessage(response,"error",15000);
+        PanelTable.style.display="none";
+        return;
+      }
+      panelTableRender(response);
+    }
+  );
+};    
+/*=========================================================
+
+=========================================================*/
+var panelTableRender=function(txt){
+  var list=txt.replaceAll(/\n/img,"").trim().split(/\;/);
+  var base=document.createElement("div");
+
+  base.className="panel-table";
+
+  for(var i=0;i<list.length;i++){
+    if(!list[i].length)
+      continue;
+    else{
+      var item=list[i].replaceAll(/(\(|\))/img,",").split(/\,/)
+      var div=document.createElement("div");
+      var table=document.createElement("table");
+      var row=table.insertRow();
+
+      table.style.display="none";
+  
+      row.insertCell(0).innerHTML="<b>Field</b>";
+      row.insertCell(1).innerHTML="<b>Type</b>";
+      for(var c=1;c<item.length-1;c++){
+        row=table.insertRow();
+        row.insertCell(0).innerText=item[c].split(/\s/)[0];
+        row.insertCell(1).innerText=item[c].split(/\s/)[1];
+      }
+      div.appendChild(document.createElement("a")).innerText=item[0];
+      div.appendChild(table);
+      base.append(div);
+    }
+  }
+  PanelTableBody.innerHTML="";
+  PanelTableBody.append(base);
+};
+/*=========================================================
+
+=========================================================*/
+motifAction(window,"load",function(){
+  //tablesShow();
+});
+
+
+</script>

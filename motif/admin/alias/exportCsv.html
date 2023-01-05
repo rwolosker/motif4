@@ -1,0 +1,39 @@
+<div class="menu">
+  <p class="join">Alias</p>
+  <a href="javascript:exportCsv();">Exportar CSV</a>
+</div>
+<div id="exportCsvPanel" class="panel">
+  <div class="title">Exporta CSV</div>
+  <div class="field">
+    <div class="fieldInline">
+      <span>CSV</span>
+      <textarea style="min-width:400px;min-height:200px"></textarea>
+    </div>
+    <div class="field">
+      <a onclick="exportCsvPanel.style.display='none';">Fechar</a>
+    </div>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var exportCsv=function(){
+  motifPanel(exportCsvPanel);
+  exportCsvPanel.style.top=tabela.offsetTop+"px";
+  exportCsvPanel.style.left=tabela.offsetLeft+"px";
+  {
+    var buffer="";
+
+    for(var i=1;i<tabela.rows.length;i++)
+      buffer=buffer
+        .concat(tabela.rows[i].cells[0].innerText).concat(";")
+        .concat(tabela.rows[i].cells[1].innerText).concat(";")
+        .concat(tabela.rows[i].cells[2].innerText).concat(";")
+        .concat(tabela.rows[i].cells[3].innerText)
+        .concat("\r\n");
+
+    exportCsvPanel.querySelector("textarea").value=buffer;    
+  }
+};
+</script>

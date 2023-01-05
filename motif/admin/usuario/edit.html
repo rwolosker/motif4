@@ -1,0 +1,87 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="UsuarioSave.htm" enctype="multipart/form-data">
+    #{tag.include:str,'admin/usuario/keep.html'}
+    <div class="field">
+      <div class="fieldInline">
+        <span>Nome</span>
+        #{=nomeLen,tag.fieldLen:int,'usuarioDat','nome'}
+        #{tag.input:str,'nome',nome,%nomeLen,%nomeLen}
+      </div>  
+    </div>
+    <div class="field">
+      <div class="fieldInline">
+        <span>CPF</span>
+        #{=cpfLen,tag.fieldLen:int,'usuarioDat','cpf'}
+        #{tag.input:str,'cpf',cpf,14,14}
+      </div>
+      <div class="fieldInline">
+        <span>Matricula</span>
+        #{=matriculaLen,tag.fieldLen:int,'usuarioDat','matricula'}
+        #{tag.input:str,'matricula',matricula,12,12}
+      </div>
+      <div class="fieldInline">
+        <span>UID</span>
+        #{=uidLen,tag.fieldLen:int,'usuarioDat','uid'}
+        #{tag.input:str,'uid',uid,%uidLen,%uidLen}
+      </div>
+      <div class="fieldInline">
+        <span>Telefone</span>
+        #{=telefoneLen,tag.fieldLen:int,'usuarioDat','telefone'}
+        #{tag.input:str,'telefone',telefone,%telefoneLen,%telefoneLen}
+      </div>
+    </div>
+    <div class="field">
+      <div class="fieldInline">
+        <span>E-Mail</span>
+        #{=emailLen,tag.fieldLen:int,'usuarioDat','email'}
+        #{tag.input:str,'email',email,%emailLen,%emailLen}
+      </div>
+    </div>
+    <div class="field checkbox">
+      <style>
+        div.checkbox>div{
+          vertical-align:middle;   
+        }
+        div.checkbox>div span{
+          min-width:90px;    
+        }
+      </style>
+      <div>#{tag.checkbox:str,'ativo','Ativo',%ativo}</div>
+      <div>#{tag.checkbox:str,'bloqueado','Bloqueado',%bloqueado}</div>
+      <div>#{tag.checkbox:str,'ldap','Ldap',%ldap}</div>
+      <div>#{tag.checkbox:str,'cerberus','Cerberus',%cerberus}</div>
+    </div>
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Limpar" onclick="clean(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+      #{tag.render:str,%id,'admin/usuario/senhaPanel.html'}
+    </div>
+  </form>
+  <script>
+  var title="Usuario Edit";
+  /*=========================================================
+  
+  =========================================================*/
+  var save=function(btn){
+    motifSubmit(btn.form);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var clean=function(){
+    document.forms[0].action="UsuarioNovo.htm";
+    motifSubmit(document.forms[0]);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var volta=function(){
+    document.forms[0].action="usuario.html";
+    motifSubmit(document.forms[0]);
+  };
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

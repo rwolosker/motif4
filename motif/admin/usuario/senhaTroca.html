@@ -1,0 +1,42 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="UsuarioSenhaTroca.htm" enctype="multipart/form-data">
+    <div class="field">
+      <span>Atual</span>
+      <input type="password" name="senha0" size="20">
+    </div>
+    <div class="field">
+      <span>Nova</span>
+      <input type="password" name="senha1" size="20">
+    </div>
+    <div class="field">
+      <span>Confirma</span>
+      <input type="password" name="senha2" size="20">
+    </div>
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>  
+  </form>
+  <script>
+  var title="Usuario Troca Senha";
+  var save=function(btn){
+    motifSubmit(btn.form);
+  };
+  var volta=function(){
+    document.forms[0].action="aplicacao.html";
+    document.forms[0].submit();
+  };
+  window.addEventListener("load",function(){
+    if(0){
+      var btn=document.querySelector("input[value='Salvar']");
+      
+      btn.form.action="";
+      btn.remove();
+      motifMessage("Usuario com LDAP nao troca senha.","alert",10000);
+    }
+  });
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

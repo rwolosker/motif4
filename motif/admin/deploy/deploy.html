@@ -1,0 +1,77 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="field">
+      #{tag.upload:str,arquivo,'arquivo','Arquivo'}
+    
+    </div>
+  
+    <div class="button">
+      <input type="button" value="Deploy" onclick="deploy(this);">
+      <input type="button" value="Make" onclick="make();">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+  </form>
+</div>
+<script>
+var title="Deploy";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var make=function(){
+  document.forms[0].action="DeployMake.htm";
+  motifSubmit(document.forms[0]);
+};
+/*=========================================================
+
+=========================================================*/
+var deploy=function(btn){
+  var acao=function(){
+    var table=arquivo.querySelector("table");
+    var i;
+    var count=0;
+    var index=-1;
+
+    if(table.rows.length<=1){
+      motifMessage("Nenhum Arquivo para Deploy.","error",15000);
+      return; 
+    }
+    for(i=1;i<table.rows.length;i++){
+      var item=table.rows[i].cells[0].innerText;
+
+      if(item.match(/zip$/)){
+        count+=1;
+        index=i;
+      }
+    }
+    if(count>1){
+      motifMessage("Somente <b>Um</b> arquivo para Deploy.","error",15000);
+      return;
+    }
+    if(!count){
+      motifMessage("Nenhum Arquivo ZIP para Deploy.","error",15000);
+      return;
+    }
+    btn.form.action="DeployInstall.htm";
+    motifSubmit(btn.form);
+  };
+  var param={
+    msg:"Confirma <b>Deploy</b>?",
+    buttons:"SIM|NAO",
+    action:function(obj){
+      obj.close();
+      if(obj.label=="SIM")
+        acao();
+    }    
+  };
+  motifMessage(param,"action",15000);
+};
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

@@ -1,0 +1,61 @@
+<input type="button" value="Senha" onclick="usuarioSenhaPanelShow(this);">
+<div id="usuarioSenhaPanel" class="panel">
+  <div class="title">
+  Definir Senha
+  </div>
+  <div class="field">
+    <span>Senha</span>
+    <input type="text" name="senha0" size="20">
+  </div>
+  <div class="field">
+    <span>Senha</span>
+    <input type="text" name="senha1" size="20">
+  </div>
+  <div class="field button">
+    <a>Definir</a>
+    <a>Fechar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var usuarioSenhaDefine=function(){
+  var form=document.forms[0];
+  var item=[];
+  var call=function(txt,xml){
+    if(xml.response.match(/^ERRO.*/))
+      motifMessage(xml.response,"error",15000);
+    else
+      motifMessage(xml.response,"success",15000);
+  };
+  item.push(form.id);
+  item.push(form.senha0);
+  item.push(form.senha1);
+  motifMessage("Aguarde...","alert",0);
+  motifAjax("UsuarioSenhaDefine.htm",item,call);
+};
+/*=========================================================
+
+=========================================================*/
+var usuarioSenhaPanelShow=function(btn){
+  usuarioSenhaPanel.style.display="inline-block";
+  usuarioSenhaPanel.style.left=btn.offsetLeft+"px";
+  usuarioSenhaPanel.style.top=(btn.offsetTop-usuarioSenhaPanel.offsetHeight)+"px";
+  usuarioSenhaPanel.onclick=function(action){
+    var a=motifActionTarget(action,"a");
+    
+    action.stopPropagation();
+    if(!a)
+      return;
+    switch(a.innerText.toLowerCase()){
+      case "fechar":
+        usuarioSenhaPanel.style.display="none";
+        break;
+      case "definir":
+        usuarioSenhaDefine();
+        break;
+    }
+  }
+}
+</script>

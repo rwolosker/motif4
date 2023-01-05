@@ -1,0 +1,24 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  
+  
+</div>
+<script>
+var title="Aplicacao";
+var goAfter=function(){
+  var urlAfter="#{urlAfter}";
+  
+  if(urlAfter.length>0){
+    if(urlAfter.match(/usuariologin/img))
+      urlAfter="aplicacao.html";
+    location.href=urlAfter;
+  }
+};
+window.addEventListener("load",goAfter);
+motifOpenWindow(undefined,500,400,1);
+if(document.location.search.match(/logout/)){
+  document.cookie="session=";
+  motifMessage("Você Saiu!","info");  
+}
+</script>
+#{tag.include:str,'templateEnd.html'}

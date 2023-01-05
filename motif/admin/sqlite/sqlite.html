@@ -1,0 +1,141 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="field">
+      <span>database</span>
+      <input type="text" name="database" value="../data.db" style="width:534px">
+    </div>
+    <div class="field">
+      #{tag.checkbox:str,'useDat','Module DAT',0}
+    </div>
+    <div class="field">
+      <div class="fieldInline">
+        <span>Command</span>
+        <textarea name="command" style="width:600px;height:180px"></textarea>
+      </div>
+    </div>
+    <div class="button">
+      <input type="button" value="Voltar" onclick="volta();">
+      <input type="button" value="Query" onclick="query(this);">
+      <input type="button" value="Clear" onclick="queryClear();">
+      #{tag.include:str,'admin/sqlite/tables.html'}
+      #{tag.include:str,'admin/sqlite/catalogo.html'}
+    </div>
+    <div class="field">
+      <style>
+        div.resultOutput{
+          width:610px;
+          min-height:200px;
+          max-height:300px;
+          background-color:#D6B5B5;
+          overflow:scroll;
+          white-space:pre;
+          resize:both;
+          padding:2px;
+          padding-left:5px; 
+        }
+        div.resultOutput table{
+          background-color:#BDBDBD;
+          background-color:#BDC9C2;
+           
+        }      
+      </style>
+      <span>Out</span>
+      <div class="resultOutput"></div>
+    </div>
+  </form>
+</div>
+<script>
+var title="Sqlite/Dat";
+var command=null;
+var database=null;
+var useDat=null;
+var resultOutput=null;
+/*=========================================================
+
+=========================================================*/
+var queryClear=function(){
+  resultOutput.innerHTML="";
+};
+/*=========================================================
+
+=========================================================*/
+var query=function(btn){
+  if(!database.value.trim().length){
+    motifMessage("Informe Arquivo Database." ,"error",15000);
+    return;  
+  }
+  if(!command.value.trim().length){
+    motifMessage("Nenhum Comando." ,"error",15000);
+    return;  
+  }
+  motifMessage("Aguarde..." ,"alert",0);
+  motifAjax(
+    "SqLiteDatQuery.htm",[
+      {name:"database",value:database.value},
+      {name:"useDat",value:useDat.checked?1:0},
+      {name:"command",value:command.value}], 
+    function(response){
+      motifMessage("Aguarde..." ,"alert",1);
+      var result=response.replace(/\r/img,"").split(/\n/);
+
+      for(var i=0;i<result.length;i++){
+        var linha=result[i];
+        var tipo=linha.split(/\:/)[0];
+        var body=linha.split(/\:/)[1];
+        var div=document.createElement("div");
+        var linhas=null;
+
+        switch(tipo){
+          case "erro":
+            div.innerHTML="<b>ERRO:</b> "+body;
+            resultOutput.append(div);
+            break;
+          case "affected":
+            div.innerHTML=body;
+            resultOutput.append(div);
+            break;
+          case "table":
+            linhas=document.createElement("div");
+            div.innerHTML=atob(body);
+            resultOutput.append(linhas);
+            resultOutput.append(div);
+            linhas.innerHTML="lines: "
+              +(div.querySelector("table").rows.length-1);  
+            break;
+        }
+      }
+      resultOutput.scrollTo(0,resultOutput.scrollHeight);
+    }
+  ); 
+};
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var resultMessage=function(msg){
+  var result=document.querySelectorAll("div.resultOutput")[0];
+  var div=document.createElement("div");
+
+  div.innerHTML=msg;
+  result.append(div);
+};
+/*=========================================================
+
+=========================================================*/
+motifAction(window,"load",function(){
+  command=document.forms[0].command;
+  database=document.forms[0].database;
+  useDat=document.forms[0].useDat;
+  resultOutput=document.querySelectorAll("div.resultOutput")[0];
+  motifTextAreaIdent(command);
+});
+</script>
+#{tag.include:str,'admin/sqlite/importa.html'}
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

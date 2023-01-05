@@ -1,0 +1,50 @@
+<style>
+  #caminho{
+    margin:5px;
+    font-weight:normal;
+    color:#670B57;
+  }
+</style>
+<div id="caminho">caminho</div>
+<script>
+window.addEventListener("load",function(){
+  var pagina=location.pathname.split(/\//);
+  
+  pagina=pagina[pagina.length-1];
+  
+  if(pagina.match(/^.*html$/)){
+    var list=document.body.querySelectorAll("A[href='"+pagina+"']");
+    
+    if(list.length==1){
+      var obj=list[0];
+      var item=[];
+      
+      item.push(pagina.replace(/\.html$/img,""));
+      while(obj!=document.body){
+        var span=obj.querySelector("span");
+        
+        if(span)
+          item.push(span.innerHTML);
+        obj=obj.parentNode;
+      }
+      item.reverse();
+      caminho.innerHTML=item.join("/ ");
+      document.cookie="caminho=";
+      document.cookie="caminho="+item.join("/");      
+      return;
+    }
+  }
+  if(pagina.match(/^.*htm$/)){
+    var tmp=document
+      .cookie
+      .substr(document.cookie.indexOf("caminho=")+"caminho=".length)
+      .split(/\;/)[0]
+      .concat("/")
+      .concat(pagina.replace(/\.htm$/img,""))
+      .split(/\//)
+      .join("/ ");
+    
+    caminho.innerHTML=tmp;
+  }
+});
+</script>

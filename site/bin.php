@@ -1,0 +1,52 @@
+<?php
+$proxy=false;
+$proxyUrl="tcp://193.0.0.18:8888";
+$deliveryZip="delivery.zip";
+
+if($argc>1&&$argv[1]=="proxy")
+  $proxy=true;
+$http=array(
+  "timeout"=>30.0
+);
+if($proxy)
+  $http["proxy"]=$proxyUrl;
+$context=stream_context_create($html);
+$pr=fopen(
+  "http://dadosabertos2.rio.rj.gov.br/ferramenta/".$deliveryZip,
+  "rb",
+  false,
+  $context
+);
+if(!$pr){
+  echo("ERRO");
+  exit(1);
+}
+if(file_exists($deliveryZip))
+  unlink($deliveryZip);
+$f=fopen($deliveryZip,"wb");
+fwrite($f,stream_get_contents($pr));
+fclose($f);
+fclose($pr);
+
+if(!is_dir("bin"))
+  mkdir("bin",0777,true);
+$zip=zip_open($deliveryZip);
+while($entry=zip_read($zip)){
+  $arquivo=zip_entry_name($entry);
+  zip_entry_open($zip,$entry);
+  $len=zip_entry_filesize($entry);
+  if($len){
+    $arquivo=explode("/",$arquivo);
+    $arquivo=count($arquivo)==1?$arquivo[0]:$arquivo[1];
+    if(file_exists("bin/$arquivo"))
+      unlink("bin/$arquivo");
+    $f=fopen("bin/$arquivo","wb");
+    fwrite($f,zip_entry_read($entry,$len));
+    fclose($f);
+    chmod("bin/$arquivo",0777);
+  }
+  zip_entry_close($entry);
+}
+zip_close($zip);
+unlink($deliveryZip);
+?>

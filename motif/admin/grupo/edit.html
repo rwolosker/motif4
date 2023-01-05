@@ -1,0 +1,42 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="GrupoSave.htm" enctype="multipart/form-data">
+    #{tag.include:str,'admin/grupo/keep.html'}
+    <div class="field">
+      <span>Nome</span>
+      #{=nomeLen,tag.fieldLen:int,'grupoDat','nome'}
+      #{tag.input:str,'nome',nome,%nomeLen,%nomeLen}
+    </div>
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Limpar" onclick="clean(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+      #{tag.render:str,id,'admin/grupo/remove.html'}
+    </div>
+  </form>
+  <script>
+  var title="Grupo Edit";
+  /*=========================================================
+  
+  =========================================================*/
+  var save=function(btn){
+    motifSubmit(btn.form);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var clean=function(){
+    document.forms[0].action="GrupoNovo.htm";
+    motifSubmit(document.forms[0]);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var volta=function(){
+    document.forms[0].action="grupo.html";
+    motifSubmit(document.forms[0]);
+  };
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

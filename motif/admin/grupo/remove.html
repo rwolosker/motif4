@@ -1,0 +1,17 @@
+<input type="button" value="Remover" onclick="removeGrupo(this);">
+<script>
+var removeGrupo=function(btn){
+  var param={
+    msg:"Confirma remover este item?",
+    buttons:"SIM|NAO",
+    action:function(obj){
+      obj.close();
+      if(obj.label=="SIM"){
+        btn.form.action="GrupoRemove.htm";
+        motifSubmit(btn.form);
+      }
+    }    
+  };
+  motifMessage(param,"action",15000);
+};
+</script>

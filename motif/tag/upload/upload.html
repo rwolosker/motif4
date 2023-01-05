@@ -1,0 +1,24 @@
+<style>
+  #{tag.include:str,'tag/upload/upload.css'}
+</style>
+<div class="upload" id="%s"><!-- name -->
+  <span class="upload">%s</span><!-- Label -->
+  <table>
+    <tr>
+      <th>Arquivo</th>
+      <th>Tamanho</th>
+      <th></th>
+      <th></th>
+    </tr>
+    %s<!-- rows -->
+  </table>
+  <a class="upload">Adicionar</a>
+</div>
+<script>
+#{tag.include:str,'tag/upload/upload.js'}
+motifAction(window,"load",function(){
+  uploadControl(
+    document.getElementById("%s")//<!-- name -->
+  );
+});
+</script>

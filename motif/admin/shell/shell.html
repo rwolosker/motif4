@@ -1,0 +1,56 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <style>
+    textarea{
+      width:700px;
+      height:200px;  
+    }
+  </style>
+  <form method="POST" action="ShellCmd.htm" enctype="multipart/form-data">
+    <div class="field">
+      <div class="fieldInline">
+        <span>Command</span>
+        <textarea name="command">#{command}</textarea>
+      </div>
+    </div>
+    <div class="button">
+      <input type="button" value="Executar" onclick="execute(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+      #{tag.include:str,'admin/shell/upload.html'}
+      #{tag.include:str,'admin/shell/download.html'}
+      <script>
+      #{tag.include:str,'admin/shell/shell.js'}
+      </script>
+    </div>
+    <div class="field">
+      <div class="fieldInline">
+        <span>Out</span>
+        <textarea name="commandOut">#{commandOut}</textarea>
+      </div>
+    </div>
+  </form>
+  <script>
+  var title="Shell";
+  /*=========================================================
+  
+  =========================================================*/
+  var execute=function(btn){
+    var param=[];
+
+    param.push({name:"command",value:btn.form.command.value});
+    motifMessage("Aguarde...","alert",0);
+    motifAjax("ShellCmdAjax.htm",param,function(response){
+      motifMessage("Aguarde...","alert",1);
+      btn.form.commandOut.value=response;
+    });
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var volta=function(){
+    location.href="aplicacao.html";
+  };
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

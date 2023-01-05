@@ -1,0 +1,4 @@
+id=integer
+alias=text,129
+real=text,129
+ativo=boolean

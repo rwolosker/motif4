@@ -1,0 +1,61 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  #{tag.include:str,'admin/papel/bash.html'}
+  #{tag.include:str,'admin/papel/config.html'}
+  <form method="POST" action="PapelTable.htm" enctype="multipart/form-data">
+    #{tag.include:str,'admin/papel/keep.html'}
+    <div class="field">
+      <span>Busca</span>
+      #{tag.input:str,'exemplo',pesquisa,30,1024}
+    </div>
+    <div class="button">
+      <input type="button" value="Buscar" onclick="busca(this);">
+      <input type="button" value="Novo" onclick="novo();">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      #{tag.include:str,'admin/papel/table.html'}
+    </div>
+  </form>
+</div>
+<script>
+var title="Papel";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var novo=function(){
+  document.forms[0].action="PapelNovo.htm";
+  motifSubmit(document.forms[0]);
+};
+/*=========================================================
+
+=========================================================*/
+var busca=function(btn){
+  btn.form.pesquisa.value=btn.form.exemplo.value;
+  motifSubmit(btn.form);
+};
+/*=========================================================
+
+=========================================================*/
+var edita=function(action){
+  var a=action.target;
+  
+  if(a.tagName&&a.tagName=="A"){
+    var id=a.parentNode.parentNode.getElementsByTagName("TD")[0].innerHTML;
+    
+    document.forms[0].action="PapelSelect.htm?idPapel="+id;
+    motifSubmit(document.forms[0]);
+  }
+};
+/*=========================================================
+
+=========================================================*/
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

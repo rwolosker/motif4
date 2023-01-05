@@ -1,0 +1,27 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="UsuarioLogin.htm" enctype="multipart/form-data">
+    <div class="field">
+      <span>Usuario</span>
+      <input type="text" size="21" maxlength="20" name="usuario">
+    </div>
+    <div class="field">
+      <span>Senha</span>
+      <input type="password" size="21" maxlength="20" name="senha">
+    </div>
+    <div class="button">
+      <input type="button" value="Login" onclick="login(this);">
+    </div>
+    #{tag.keep:str,'urlAfter',urlAfter}
+  </form>
+  <script>
+  var title="Usuario Login";
+  var login=function(btn){
+    btn.form.submit();
+  };
+  //motifMenuConfig=function(){};
+  //document.cookie="sessionUser==; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";  
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

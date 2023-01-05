@@ -1,0 +1,65 @@
+<div class="menu">
+  <p class="join">Alias</p>
+  <a href="javascript:importCsv();">Importar CSV</a>
+</div>
+<div id="importCsvPanel" class="panel">
+  <div class="title">Importa CSV</div>
+  <div class="field">
+    <div class="fieldInline">
+      <span>CSV</span>
+      <textarea style="min-width:400px;min-height:200px"></textarea>
+    </div>
+    <div class="field">
+      <a onclick="importCsvPanel.style.display='none';">Fechar</a>
+      <a onclick="importCsvExemplo();">Exemplo</a>
+      <a onclick="importCsvSubmit();">Importar</a>
+    </div>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var importCsv=function(){
+  motifPanel(importCsvPanel);
+  importCsvPanel.style.top=tabela.offsetTop+"px";
+  importCsvPanel.style.left=tabela.offsetLeft+"px";
+};
+/*=========================================================
+
+=========================================================*/
+var importCsvExemplo=function(){
+  var textarea=importCsvPanel.querySelector("textarea");
+
+  textarea.value="0;alias.html;Alias::Alias";
+ 
+};
+/*=========================================================
+
+=========================================================*/
+var importCsvSubmit=function(){
+  var textarea=importCsvPanel.querySelector("textarea");
+  var param={
+    msg:"Confirma importar registros?",
+    buttons:"SIM|NAO",
+    action:function(obj){
+      obj.close();
+      if(obj.label=="SIM"){
+        motifMessage("Aguarde...","alert");
+        motifAjax(
+          "AliasImport.htm",
+          [{name:"csv",value:textarea.value}],
+          function(response,xml){
+            var type="success";
+            motifMessage("Aguarde...","alert",1);
+            if(response.match(/ERRO/))
+              type="error";
+            motifMessage(response,type,15000);
+          }
+        );
+      }
+   }  
+  };
+  motifMessage(param,"action",15000);
+};
+</script>

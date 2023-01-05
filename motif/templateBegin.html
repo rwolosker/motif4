@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="iso-8859-15">
+    <script>
+    #{tag.include:str,'motif.js'}
+    #{tag.include:str,'motifSecurity.js'}
+    </script>
+    <script>
+      var motifProtect=undefined;
+      var motifSecurity=false;
+      var motifSecurityForce=false;
+    </script>
+    <style>
+      #{tag.include:str,'motif.css'}
+    </style>
+    <title></title>
+  </head>
+  <body>
+    #{tag.include:str,'logo.html'}
+    <div class="basemenu" data-sec="user">
+    </div>
+    #{tag.include:str,'caminho.html'}
+    #{tag.include:str,'custom.html'}
+    #{tag.include:str,'menu.html'}
+    

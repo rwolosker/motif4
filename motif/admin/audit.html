@@ -1,0 +1,60 @@
+<script>
+var auditShow#{auditPanelId}=function(btn){
+  var panel=#{auditPanelId};
+  var divTable=panel.querySelectorAll("div.audit-table")[0];
+  var auditTag="#{auditTag}";
+  var auditDef="#{auditDef}";
+  var auditId="#{auditId}";
+  var item=[];
+  var call=function(txt,xml){
+    if(xml.response.match(/^ERRO.*/))
+      motifMessage(xml.response,"error",15000);
+    else{
+      motifMessage("","alert",1);
+      divTable.innerHTML=xml.response;
+    }
+  };
+  panel.style.display="inline";
+  panel.onclick=function(event){
+    if(event.target&&event.target.tagName&&event.target.tagName=="A"){
+      if(event.target.innerHTML=="Fechar")
+        panel.style.display="none";
+    }
+  };
+  item.push({name:"auditTag",value:auditTag});
+  item.push({name:"auditId",value:auditId});
+  motifMessage("Aguarde...","alert",15000);
+  motifAjax("AuditShow.htm",item,call);
+};
+</script>
+<style>
+  div.audit-panel{
+    position:absolute;
+    left:20px; 
+  }
+  div.audit-panel div.audit-body{
+    min-width:200px; 
+    min-height:100px;
+    max-height:400px;  
+  }
+  div.audit-panel div.audit-body div.audit-table{
+    overflow:auto; 
+    max-height:350px;
+    margin:5px;   
+  }
+  div.audit-panel div.audit-body div.audit-table table{
+    margin-right:5px; 
+  }
+  div.audit-panel div.audit-footer{
+    text-align:left; 
+  }        
+</style>
+<input auditTag="#{auditTag}" data-sec="#{auditSec}" type="button" value="Auditoria" onclick="auditShow#{auditPanelId}(this);">
+<div id="#{auditPanelId}" data-sec="#{auditSec}" class="panel audit-panel">
+  <div class="field audit-body">
+    <div class="audit-table"></div>
+  </div>
+  <div class="field audit-footer">
+    <a>Fechar</a>
+  </div>
+</div>

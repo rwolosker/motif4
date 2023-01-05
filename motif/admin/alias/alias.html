@@ -1,0 +1,65 @@
+#{tag.include:str,'templateBegin.html'}
+#{tag.include:str,'admin/alias/exportCsv.html'}
+#{tag.include:str,'admin/alias/importaCsv.html'}
+<div class="main">
+  <form method="POST" action="AliasTable.htm" enctype="multipart/form-data">
+    #{tag.keep:str,'AliasTable',AliasTable}
+    <div class="field">
+      <span>Busca</span>
+      #{tag.input:str,'exemplo',exemplo,30,1024}
+    </div>
+    <div class="button">
+      <input type="button" value="Buscar" onclick="busca(this);">
+      <input type="button" value="Novo" onclick="novo();">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      #{tag.include:str,'admin/alias/table.html'}
+    </div>
+  </form>
+</div>
+<script>
+var title="Alias";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var novo=function(){
+  document.forms[0].action="AliasNovo.htm";
+  motifSubmit(document.forms[0]);
+};
+/*=========================================================
+
+=========================================================*/
+var busca=function(btn){
+  motifSubmit(btn.form);
+};
+/*=========================================================
+
+=========================================================*/
+var edita=function(action){
+  var a;
+  
+  if((a=motifActionTarget(action,"a"))){
+    if(a.innerText=="Editar"){
+      var id=a.parentNode.parentNode.getElementsByTagName("TD")[0].innerHTML;
+      
+      document.forms[0].action="AliasSelect.htm?idAlias="+id;
+      motifSubmit(document.forms[0]);
+    }
+    if(a.innerText=="Copiar"){
+      var id=a.parentNode.parentNode.getElementsByTagName("TD")[0].innerHTML;
+      
+      document.forms[0].action="AliasReuse.htm?idAlias="+id;
+      motifSubmit(document.forms[0]);
+    }
+  }
+};
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

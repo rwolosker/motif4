@@ -1,0 +1,104 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <div class="menu">
+    <span data-sec="manager">Permissão</span>
+    <a href="javascript:exportaCsv(event);">Exportar</a>
+    <a href="javascript:importaCsv(event);">Importa</a>
+  </div>
+  <form method="POST" action="PermissaoList.htm" enctype="multipart/form-data">
+    <div class="field">
+      <span>Busca</span>
+      #{tag.input:str,'exemplo',exemplo,30,1024}
+    </div>
+    <div class="button">
+      <input type="button" value="Buscar" onclick="busca(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      <div>
+        <span><b>linhas:</b></span>
+        <span id="tabelaLinhas"></span>
+      </div>
+      <table id="tabela">
+        <tr>
+          <th>MATRICULA</th>
+          <th>USUARIO</th>
+          <th>GRUPO</th>
+          <th>PAPEL</th>
+        </tr>
+        #{PermissaoTable}
+      </table>
+    </div>
+  </form>
+</div>
+<script>
+var title="Permissao Usuário";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var busca=function(btn){
+  motifSubmit(btn.form);
+};
+/*=========================================================
+
+=========================================================*/
+motifAction(window,"load",function(){
+  tabelaLinhas.innerHTML=tabela.rows.length-1;
+});
+/*=========================================================
+
+=========================================================*/
+var exportaCsv=function(){
+  motifMessage("Aguarde...","alert",0);
+  motifAjax(
+    "PermissaoCsv.htm",
+    [],
+    function(response){
+      motifMessage();
+      motifDownloadValue(response);
+    }
+  );
+};
+/*=========================================================
+
+=========================================================*/
+var importaCsv=function(){
+  motifUpload(function(obj){
+    var url=obj.name+":"+obj.url;
+    var param={};
+    param.msg="Confirma Importação Permissões?";
+    param.buttons="Sim|Nao";
+    param.action=function(obj){
+      if(obj.label=="Sim"){
+        var param=[];
+        param.push({
+          name:"csv0",
+          value:url
+        });
+        motifMessage("Aguarde...","alert",0);
+        motifAjax(
+          "PermissaoImport.htm",
+          param,
+          function(response){
+            motifMessage();
+            if(response.match(/^ERRO.*/))
+              motifMessage(response,"error",15000);
+            else
+              motifMessage(response,"success",15000);
+          }
+        );
+      }
+      obj.close();
+    };
+    motifMessage(param,"action",15000);
+  });
+};
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

@@ -1,0 +1,36 @@
+<div id="logo">
+  <style>
+    div#logo{
+      padding-top:3px; 
+      padding-left:3px; 
+    } 
+    div#logo img{
+      max-width:90px;
+      max-height:80px;
+      display:inline-block;
+    }
+    div#logo div{
+      display:inline-block;
+      vertical-align:top; 
+    }
+    div#logo div span{
+      display:block;
+      color:#00809F; 
+      font-weight:bold;
+    }
+    div#logo span.sigla{
+      font-size:11pt;
+    }
+  </style>
+  <img src="../img/iplanrio.png">
+  <div>
+    <span class="sigla">#{appSigla}</span>
+    <span class="sistema">#{appSistema} #{appVersion}</span>
+    <span class="diretoria">#{appDiretoria}</span>
+  </div>
+  <script>
+  window.addEventListener("load",function(){
+    //document.body.insertBefore(logo,document.getElementsByClassName("basemenu")[0]);  
+  });
+  </script>
+</div>

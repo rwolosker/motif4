@@ -1,0 +1,50 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="UsuarioGrupoSave.htm" enctype="multipart/form-data">
+    #{tag.include:str,'admin/usuario/keep.html'}
+    <div class="field">
+      <span>Nome</span>
+      <span><b>#{usuarioNome}</b></span>
+    </div>
+    <div class="field">
+      <span>Grupos</span>
+      <style>
+        div.checklist div{
+          white-space:nowrap;
+        }
+        div.checklist{
+          padding-right:25px;
+          max-height:220px;
+          overflow-y:scroll;
+        }
+      </style>
+      #{tag.checklist:str,
+        'item',
+        grupoTodos,
+        grupoUsuario
+      }
+    </div>
+    <div class="button">
+      <input type="button" value="Salvar" onclick="save(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+  </form>
+  <script>
+  var title="Usuario Grupo Edit";
+  /*=========================================================
+  
+  =========================================================*/
+  var save=function(btn){
+    motifSubmit(btn.form);
+  };
+  /*=========================================================
+  
+  =========================================================*/
+  var volta=function(){
+    document.forms[0].action="usuario.html";
+    motifSubmit(document.forms[0]);
+  };
+  </script>
+</div>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

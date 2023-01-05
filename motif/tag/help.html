@@ -1,0 +1,35 @@
+<input id="#ajuda#Btn#" type="button" value="Ajuda" onclick="#ajuda#Click(this);">
+<style>
+  div.help{
+    min-width:200px; 
+  }
+  div.help div.help-body{
+    min-height:200px; 
+  }
+</style>
+<div id="#ajuda#Help" class="help">
+  <div class="help-body">
+  #{tag.include:str,'#help.html#'}
+  </div>
+</div>
+<script>
+  window["#ajuda#Click"]=function(btn){
+    var ajuda=window["#ajuda#Help"];
+    var hidden=null;
+
+    window.event.stopPropagation();
+    
+    ajuda.style.display="inline";
+    ajuda.style.top=btn.offsetTop+"px";
+    ajuda.style.left=btn.offsetLeft+"px";
+
+    hidden=function(action){
+      action.stopPropagation();
+      if(ajuda.contains(action.target))
+        return;
+      ajuda.style.display="none";
+      document.body.removeEventListener("click",hidden);
+    };
+    motifAction(document.body,"click",hidden);
+  };  
+</script>

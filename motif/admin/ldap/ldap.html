@@ -1,0 +1,88 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="LdapSearch.htm" enctype="multipart/form-data">
+    #{tag.keep:str,'exemplo',exemplo}
+    <div class="field">
+      <span>Busca</span>
+      #{tag.input:str,'pesquisa',pesquisa,80,1024}
+    </div>
+    <div class="field">
+      <span>Filtro</span>
+      #{tag.bean:void,'LdapBean','ldap'}
+      #{ldap.filtroInit:void,'filtro'}
+      
+      #{tag.input:str,'filtro',filtro,80,1024}
+    </div>
+    <div class="button">
+      <input type="button" value="Buscar" onclick="busca(this);">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      <style>
+      #tabela td{
+        vertical-align:top; 
+      }
+      #tabela div{
+        white-space:pre;
+        background-color:#e0daf7;
+        padding:2px;
+        margin:2px;
+      }
+      #tabela tr:hover{
+        font-weight:normal; 
+      }
+      </style>
+      #{tag.include:str,'admin/ldap/table.html'}
+    </div>
+  </form>
+</div>
+<script>
+var title="LDAP";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var novo=function(){
+  document.forms[0].action="GrupoNovo.htm";
+  motifSubmit(document.forms[0]);
+};
+/*=========================================================
+
+=========================================================*/
+var busca=function(btn){
+  var pesquisa=btn.form.pesquisa.value.trim();
+  var filtro=btn.form.filtro.value.trim();
+  var exemplo=btn.form.exemplo;
+
+  exemplo.value=pesquisa.length
+    ?filtro.replaceAll(/\.user\./img,pesquisa)
+    :filtro;    
+  motifSubmit(btn.form);
+};
+/*=========================================================
+
+=========================================================*/
+var edita=function(action){
+  var a=motifActionTarget(action,"a");
+  var display="";
+  var div;
+  
+  if(!a)
+    return;
+  id=a.parentNode.parentNode.getElementsByTagName("TD")[0].innerHTML;
+  switch(a.innerText.toLowerCase()){
+    case "detalhe":
+      div=a.parentNode.querySelector("div");
+      display=div.style.display;
+      div.style.display=display=="none"?"block":"none";
+      break;
+  }
+};
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

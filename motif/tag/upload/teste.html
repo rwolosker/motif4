@@ -1,0 +1,23 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="field">
+      #{tag.upload:str,arquivo,'arquivo','Arquivo'}
+    </div>
+    <div class="field">
+      <input type="button" value="Salvar" onclick="save(this);">
+    </div>
+  </form>
+</div>
+<script>
+var save=function(btn){
+  btn.form.action="UploadTeste.htm";
+  motifSubmit(btn.form);
+  
+  
+};
+</script>
+
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}
+

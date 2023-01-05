@@ -1,0 +1,7 @@
+DirectoryIndex app.php
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+Header set Cache-Control "max-age=3024000, public, only-if-cached"
+</FilesMatch>
+<FilesMatch "\.(html|htm)$">
+Header set Cache-Control "no-cache"
+</FilesMatch>

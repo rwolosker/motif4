@@ -1,0 +1,11 @@
+<?php
+setcookie(
+  "#{cookie.unset}",
+  "",
+  time()-3600,
+  "/",
+  "",
+  false,
+  true
+);
+?>

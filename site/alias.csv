@@ -1,0 +1,4 @@
+alias.html;admin/alias/alias.html
+AliasTable.htm;AliasBean::table
+AliasNovo.htm;AliasBean::novo
+AliasSave.htm;AliasBean::save

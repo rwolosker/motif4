@@ -1,0 +1,16 @@
+<div>
+  <span><b>linhas:</b></span>
+  <span id="tabelaLinhas"></span>
+</div>
+<table id="tabela" onclick="edita(event);">
+  <tr>
+    <th>UID</th>
+    <th></th>
+  </tr>
+  #{LdapTable}
+</table>
+<script>
+  motifAction(window,"load",function(){
+    tabelaLinhas.innerHTML=tabela.rows.length-1;
+  });
+</script>

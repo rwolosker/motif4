@@ -1,0 +1,20 @@
+<div>
+  <span><b>linhas:</b></span>
+  <span id="tabelaLinhas"></span>
+</div>
+<table id="tabela" onclick="edita(event);">
+  <tr>
+    <th>ID</th>
+    <th>ALIAS</th>
+    <th>REAL</th>
+    <th>ATIVO</th>
+    <th></th>
+    <th></th>
+  </tr>
+  #{AliasTable}
+</table>
+<script>
+  motifAction(window,"load",function(){
+    tabelaLinhas.innerHTML=tabela.rows.length-1;
+  });
+</script>

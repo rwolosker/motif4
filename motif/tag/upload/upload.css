@@ -1,0 +1,18 @@
+span.upload{
+  margin-bottom:5px;
+}
+a.upload{
+  margin-top:5px;
+}
+div.upload td:first-child div,
+div.upload th:first-child{
+  max-width:350px;
+  overflow-x:hidden;
+  white-space:nowrap;
+}
+div.upload td textarea{
+  display:none;
+}
+div.upload td.size{
+  text-align:right;
+}

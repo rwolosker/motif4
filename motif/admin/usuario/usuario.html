@@ -1,0 +1,64 @@
+#{tag.include:str,'templateBegin.html'}
+<div class="main">
+  <form method="POST" action="UsuarioTable.htm" enctype="multipart/form-data">
+      #{tag.include:str,'admin/usuario/keep.html'}
+    <div class="field">
+      <span>Busca</span>
+      #{tag.input:str,'exemplo',pesquisa,30,1024}
+    </div>
+    <div class="button">
+      <input type="button" value="Buscar" onclick="busca(this);">
+      <input type="button" value="Novo" onclick="novo();">
+      <input type="button" value="Voltar" onclick="volta(this);">
+    </div>
+    <div class="field">
+      #{tag.include:str,'admin/usuario/table.html'}
+    </div>
+  </form>
+</div>
+<script>
+var title="Usuario";
+/*=========================================================
+
+=========================================================*/
+var volta=function(){
+  location.href="aplicacao.html";
+};
+/*=========================================================
+
+=========================================================*/
+var novo=function(){
+  document.forms[0].action="UsuarioNovo.htm";
+  motifSubmit(document.forms[0]);
+};
+/*=========================================================
+
+=========================================================*/
+var busca=function(btn){
+  btn.form.pesquisa.value=btn.form.exemplo.value;
+  motifSubmit(btn.form);
+};
+/*=========================================================
+
+=========================================================*/
+var edita=function(action){
+  var a=motifActionTarget(action,"a");
+  var id;
+  
+  if(!a)
+    return;
+  id=a.parentNode.parentNode.getElementsByTagName("TD")[0].innerHTML;
+  switch(a.innerText.toLowerCase()){
+    case "editar":
+      document.forms[0].action="UsuarioSelect.htm?idUsuario="+id;
+      motifSubmit(document.forms[0]);
+      break;
+    case "grupo":
+      document.forms[0].action="UsuarioGrupoSelect.htm?idUsuario="+id;
+      motifSubmit(document.forms[0]);
+      break;
+  }
+};
+</script>
+#{tag.postWait:str,0}
+#{tag.include:str,'templateEnd.html'}

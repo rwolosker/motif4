@@ -1,0 +1,41 @@
+    <div class="aspmessage">
+      <span>#{AspMessage}</span>
+      <span>#{AspMessageType}</span>
+      <span>#{AspMessageTime}</span>
+    </div>
+    <script>
+      var aspMessage=null;
+      
+      aspMessage=function(){
+        var div=document.querySelectorAll("div.aspmessage")[0];
+        var span=div.getElementsByTagName("SPAN");
+        
+        if(span[0].innerHTML.length)
+          motifMessage(
+            span[0].innerHTML,
+            span[1].innerHTML,
+            parseInt(span[2].innerHTML)
+          );
+        window.removeEventListener("load",aspMessage);
+      };
+      window.addEventListener("load",motifMenuConfig);
+      window.addEventListener("load",motifTextareaConfig);
+      if(window["title"]){
+        document.title=title;    
+      }
+      motifProtect=undefined;
+      motifSecurity=false;
+      if("#{app.security}"=="1"){
+        motifProtect=function(){
+          motifSecurity=true;
+          motifSecurityMain();
+        };
+      }
+      if(motifProtect){
+        motifAction(window,"load",motifProtect);
+        motifAction(window,"load",motifSecurityUserName);
+      }
+      motifAction(window,"load",aspMessage);
+    </script>
+  </body>
+</html>

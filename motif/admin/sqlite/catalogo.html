@@ -1,0 +1,103 @@
+<input type="button" value="Catalogo" onclick="catalogoShow();">
+<div id="Catalogo" class="panel">
+  <style>
+    #Catalogo{
+      min-width:200px; 
+      min-height:300px; 
+    }
+    #CatalogoBody{
+      min-height:300px;
+      max-height:300px;
+      overflow-y:auto;
+      margin:3px;  
+      padding:3px;  
+    }
+    #CatalogoBody table{
+      margin-top:5px;  
+      margin-bottom:5px;
+      background-color:#BDC9C2;
+    }
+    #CatalogoBody div{
+      margin-top:3px;
+    }
+  </style>
+  <div class="title">Catalogo</div>
+  <div class="field" id="CatalogoBody">
+  </div>
+  <div class="field">
+    <a>Fechar</a>
+  </div>
+</div>
+<script>
+/*=========================================================
+
+=========================================================*/
+var catalogoShowResolve=function(a){
+  var table=a.parentNode.querySelector("table");
+  var display=table.style.display;
+
+  table.style.display=display=="none"?"":"none";
+};
+/*=========================================================
+
+=========================================================*/
+var catalogoShow=function(){
+  var command=motifFindTagReverse(Catalogo,"form").command;
+
+  motifPanel(Catalogo);
+  Catalogo.style.top=command.offsetTop+"px";
+  Catalogo.style.left=(command.offsetWidth+40)+"px";
+  sqLiteCatalogo();
+  Catalogo.onclick=function(event){
+    var a=motifActionTarget(event,"a");
+
+    if(a)
+      switch(a.innerText){
+        case "Fechar":
+          Catalogo.style.display="none";
+          break;
+        default:
+          tableShowResolve(a);
+          break;
+      }
+  }
+};
+/*=========================================================
+
+=========================================================*/
+var sqLiteCatalogo=function(){
+  var database=motifFindTagReverse(Catalogo,"form").database;
+
+  motifMessage("Aguarde..." ,"alert",0);
+  motifAjax(
+    "SqLiteDatCatalogo.htm",[
+      {name:"database",value:database.value}],
+    function(response){
+      motifMessage("Aguarde..." ,"alert",1);
+      if(response.match(/^ERRO/img)){
+        motifMessage(response,"error",15000);
+        Catalogo.style.display="none";
+        return;
+      }
+      catalogoTableRender(response);
+    }
+  );
+};    
+/*=========================================================
+
+=========================================================*/
+var catalogoTableRender=function(txt){
+  CatalogoBody.innerHTML=txt;
+  CatalogoBody.querySelectorAll("table").forEach(function(obj){
+    obj.style.display="none";  
+  });
+};
+/*=========================================================
+
+=========================================================*/
+motifAction(window,"load",function(){
+  //tablesShow();
+});
+
+
+</script>
